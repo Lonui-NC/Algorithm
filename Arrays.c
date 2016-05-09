@@ -129,7 +129,56 @@ int mixed(int array1[],int array2[],int n1,int n2,int *mixed)
 }
 
 
-//寻找对应出现次数最多的
+//寻找对应出现次数最多的数组元素
+//首先遍历元素得到对应最大的index
+//然后用空间换时间
+//count[array[i]]++;
+int GetMaxNum(int *arr,int len,int &num)
+{
+    int index=arr[0];
+    int i;
+    for(i=0;i<len;i++)
+    {
+        if(arr[i]>index)
+        {
+            index=arr[i];
+            num=i;
+        }
+    }
+    return index;
+}
+
+//如何获取对应数组中出现次数超过一半的数
+//排序后取，对应点中间(n+1)/2一定是中间的数
+int FindMostApperse(int *num,int len)
+{
+    int candidate=0;
+    int count=0;
+    //for(int i=0;i<len)
+    int i,A,B;
+    int a[3]={1,2,3};
+    A=a[1];
+    B=0;
+    for(i=0;i<10;i++)
+    {
+        if(B==0)
+        {
+            A=a[i];
+            B=1;
+        }
+        else if(A==a[i])
+            B++;
+        else if(A!=a[i])
+        {
+            B--;
+        }
+
+    }
+}
+
+
+
+
 
 int main()
 {
