@@ -176,9 +176,256 @@ int FindMostApperse(int *num,int len)
     }
 }
 
+//找出对应的数组中唯一重复的元素
+//分别为1~N-1个数字
+//可以异或一次，所有相同的异或后为0
+//不相同的异或为1 ，不再改变
+void xor_findDup(int *a,int N)
+{
+    int tmp1=0;
+    int tmp2=0;
+    for(int i=0;i<N-1;++i)
+    {
+        tmp1+=(i+1);
+        tmp2+=a[i];
+    }
+    tmp2+=a[N-1];
+    int result=tmp2-tmp1;
+
+} 
+
+//位图法
+//设置标志位
+void xor_findDup(int *arr,int NUM)
+{
+    int *arrayflag=(int *)malloc(NUM*sizeof(int));
+    int i=1;
+    while(i<NUM)
+    {
+        arrayflag[i]=false;
+        i++;
+    }
+    for(int i=0;i<NUM;i++)
+    {
+        if(arrayflag[arr[i]]==false)
+            arrayflag[arr[i]]=true;
+        else
+        {
+            //printf("%s\n", );
+        }
+    }
+}
+
+//若进行变形，对应有多个数可能会重复，则采用以下几种方法
+//1.位图法，同上设置标志位，判断是否出现过，然后输出
+//2.数组排序法，对数组进行计数排序，然后扫描
+//3.采用Hash法
+
+int FindInteger(int array[],int n)
+{
+    int i;
+    for(int i=0;i<n;i++)
+    {
+        if(array[i]>0)
+        {
+            if(array[array[i]]>0)
+            {
+                array[array[i]]=-array[array[i]];
+            }
+            else
+            {
+                return -array[array[i]];
+            }
+        }
+        else
+        {
+            if(array[-array[i]]>0)
+            {
+                array[array[i]]=-array[array[i]];
+            }
+            else
+            {
+                return -array[-array[i]];
+            }
+        }
+    }
+}
+
+
+//判断单链表中是否存在环
+//快慢指针法判断对应是否有环
+//1.对于问题1，使用追赶的方法，设定两个指针slow、fast，
+//从头指针开始，每次分别前进1步、2步。如存在环，则两者相遇；如不存在环，fast遇到NULL退出。
+// 2.对于问题2，记录下问题1的碰撞点p，slow、fast从该点开始，再次碰撞所走过的操作数就是环的长度s。
+//3.有定理：碰撞点p到连接点的距离=头指针到连接点的距离，
+//碰撞点到连接点的距离=头指针到连接点的距离
+// 因此，分别从碰撞点、头指针开始走，相遇的那个点就是连接点。(证明在后面附注)
+// 4.已经求出连接点距离头指针的长度，加上问题2中求出的环的长度，二者之和就是带环单链表的长度
+int FindInteger(int array[],int n)
+{
+    int x,y;
+    x=y=0;
+    do
+    {
+        x=array[array[x]];//x一次走两步
+        y=array[y];//y一次走一步
+    }while(x!=y);//表明这时候走进了环里
+    x=0;
+    do
+    {
+        x=array[x];
+        y=array[y];
+    }while(x!=y);
+    return x;
+}
+
+
+//从一连串的数字中判断是否有相邻的数字
+bool IsContinuous(int * a,int n)
+{
+    int min=-1,max=-1;
+    for(int i=0;i<n;i++)
+    {
+        if(a[i]!=0)
+        {
+            if(min>a[i] || -1==min)
+            {
+                min=a[i];
+            }
+            if(max<a[i] || -1==max)
+            {
+                max=a[-i];
+            }
+        }
+    }
+    if(max-min>n-1)
+    {
+        return false;
+    }
+    else
+        return true;
+
+}
 
 
 
+//寻找对应出现奇数次的元素
+//采用异或方法
+int FIndElementWithOddCount(int *a,int n)
+{
+    int r=a[0];
+    for (int i = 0; i < n; ++i)
+    {
+        /* code */
+        r^=a[i];
+    }
+    return r;
+}
+
+//引申求2个出现奇数次的元素
+void FindElement(int a[],int length)
+{
+    int s=0;
+    int i;
+    int k=0;
+    for(i=0;i<length;i++)
+    {
+        s=s^a[i];
+    }
+    int s1=s;
+    int s2=s;
+    //求出a与b不同的那一位，分割点，用于判断
+    //与前面的对应，表示对应最后一位1
+    while(!(s1&1))
+    {
+        s1=s1>>1;
+        k++;//k表示位数
+    }
+    for(i=0;i<length;i++)
+    {
+        //表明对应位上也是1
+        if(a[i]>>k&1)
+        {
+            s=s^a[i];
+        }
+
+    }
+    // printf()
+}
+
+//找出数组中满足条件的数对
+//双指针法
+void FixedSum(int *a,int n,int d)
+{
+    for(int i=0,j=n-1;i<n &&j>=0 && i<j)
+    {
+        if(a[i]+a[j]<d)
+        {
+            ++i;
+        }
+        else if(a[i]+a[j]==d)
+        {
+            printf("%d,%d\n",a[i],a[j]);
+            ++i;
+            --j;
+        }
+        else
+            --j;
+    }
+}
+
+//若有两个数组，采用排序+线性扫描法
+void print_pairs_with_sum(int A[],int B[],int m,int n,int sum)
+{
+    sort(A,A+m);
+    sort(B,B+n);
+    int p,q;
+    p=0;
+    q=n-1;
+    while(p<m && q>=0)
+    {
+        if(A[p]+B[q]==sum)
+        {
+            cout<<"("<<A[p]<<","<<B[q]<<")"<<endl
+            p++;
+            q--;
+        }
+        else if(A[p]+B[q]>sum)
+        {
+            q--;
+        }
+        else
+        {
+            p++;
+        }
+    }
+}
+
+//采用HashTable法，寻找HashTable中小的那一个数字
+void print_pairs_with_sum2(int A[],int B[],int m,int n,int sum)
+{
+    map<int,bool> hash_table;
+    int *psmaller=A;
+    int *pbigger=B;
+    int nsmaller=(m>=n) ? n:m;
+    int nbigger=(m>=n) ? m:n;
+    if(m>n)
+    {
+        psmaller=B;
+        pbigger=A;
+    }
+    for(int i=0;i<nsmaller;i++)
+    {
+        hash_table.insert(pair<int,bool>(psmaller[i],true));
+    }
+    for(int i=0;i<nbigger;i++)
+    {
+        if(hash_table.find(sum-pbigger[i]!=hash_table.end()))
+        {
+            cout<<"("<<pbigger[i]<<","<<sum-pbigger[i]<<")"<<endl;
+        }
+    }
+}
 
 int main()
 {
