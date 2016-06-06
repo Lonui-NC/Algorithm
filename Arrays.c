@@ -427,6 +427,254 @@ void print_pairs_with_sum2(int A[],int B[],int m,int n,int sum)
     }
 }
 
+
+//如何找出数列中的缺失的数
+//将所有元素相加，然后再减一次就可以
+
+//如何判断数组中是否存在重复元素
+//先进行排序，然后进行比较相邻元素是否相同
+int comp(const void *a,const void *b)
+{
+    return (*(int *)a-*(int *)b);
+}
+
+int isArrayRepeat(int *a,int n)
+{
+    int i=0;
+    if(!a || n<1)
+    {
+        return -1;
+    }
+    qsort(a,n,sizeof(int),comp);
+    for(i=0;i<n;i++)
+    {
+        if(a[i]==a[i+1])
+            return 1;
+    }
+    return 0;
+}
+
+//遍历数组，将下标值移动到对应的元素中，判断是否发生了冲突
+int isArrayRepeat(int *a,int n)
+{
+    int j=-1;
+    for(int i=-;i<n;i++)
+    {
+        j=a[i];
+        if(i==j-1)//此时不用移动
+        {
+            continue;
+        }
+        if(a[i]==a[j-1])
+        {
+            //当前数字为a[i]
+            //需要移动的位置为j-1
+            //若此时对应j-1的数与其本身相等，则表明两者对应的值是一样的
+            return 1;
+        }
+        a[i]=a[j-1];
+        a[j-1]=j;
+        i--;
+    }
+    return 0;
+
+}
+
+
+//如何重新排列数组使得数组左边为奇数，右边为偶数
+//类似快排，两个指针，首尾指针法
+void Swap(int& a,int& b)
+{
+    int temp=a;
+    a=b;
+    b=temp;
+}
+
+void ReverseArray(int arr[],int len)
+{
+    int begin=0;
+    int end=len-1;
+    while(begin<end)
+    {
+        while(arr[begin]%2==1 && end>begin)
+        {
+            ++begin;
+        }
+        while(arr[end]%2==0 && end>begin)
+        {
+            --end;
+        }
+        Swap(arr[begin],arr[end]);
+    }
+}
+
+
+//如何把整型数组中重复的数字去掉
+int int_cmp(const void *a,const void *b)
+{
+    const int *ia=(const int *)a;
+    const int *ib=(const int *)b;
+    return *ia-*ib;
+}
+
+int unique(int *array,int number)
+{
+    int k=0;
+    //k表示下标，依次往前递增，然后通过数目删除
+    for(int i=0;i<number;i++)
+    {
+        if(array[k]!=array[i])
+        {
+            array[k+1]=array[i];
+            k++;
+        }
+    }
+    return k+1;
+}
+
+int Unique_QuickSortMethod(int *arr,int elements)
+{
+    qsort(arr,elements,sizeof(int),int_cmp);
+    return unique(arr,elements);
+}
+
+
+//寻找数组中第k大的数
+const int MIN=-32767;
+int FindSecMax(int data[],int count)
+{
+    int maxnumber=data[0];
+    int sec_max=MIN;
+    for(int i=0;i<count;i++)
+    {
+        if(data[i]>maxnumber)
+        {
+            sec_max=maxnumber;
+            maxnumber=data[i];
+        }
+        else
+        {
+            if(data[i]>sec_max)
+            {
+                sec_max=data[i];
+            }
+        }
+    }
+    return sec_max;
+}
+
+void GetMaxAndMin(int *arr,int len,int& Max,int& min)
+{
+    Max=arr[0];
+    Min=arr[0];
+    for(int i=1;i<len-1;i=i+2)
+    {
+        if(NULL==arr[i+1])
+        {
+            if(arr[i]>Max)
+                Max=arr[i];
+            if(arr[i]<Min)
+                Min=arr[i];
+        }
+        if(arr[i]>arr[i+1])
+        {
+            if(arr[i]>Max)
+                Max=arr[i];
+            if(arr[i]<Min)
+                Min=arr[i];
+        }
+        else
+        {
+            if(arr[i+1]>Max)
+                Max=arr[i+1]
+            if(arr[i]<Min)
+                Min=arr[i];
+        }
+    }
+
+}
+
+//分治法
+void GetMaxMin(int a[],int low,int high,int &max,int &min)
+{
+    int k,max1,min1,max2,min2;
+    if(high-low==1 || high-low==0)
+    {
+        a[low]>a[high]?(max=a[low],min=a[high]):(max=a[high],min=a[low]);
+    }
+    else
+    {
+        k=(low+high)/2;
+        GetMaxMin(a,low,k,max1,min1);
+        GetMaxMin(a,k+1,high,max2,min2);
+        max=max1>max2?max1:max2;
+        min=min1>min2?min1:min2;
+    }
+}
+
+
+//将数组的后面m个数移动到前面m个数
+//前m个数颠倒
+//后面n-m个数颠倒
+//将n个数颠倒
+void func(int *start,int *end)
+{
+    //将数字前后颠倒
+    while(start<end)
+    {
+        int temp=*start;
+        *start=*end;
+        *end=temp;
+        ++start;
+        --end;
+    }
+}
+
+
+void f(int n,int m,int *numbers)
+{
+    func(numbers,numbers+m-1);
+    func(numbers+m,numbers+n-1);
+    func(numbers,numbers+n-1);
+}
+
+
+//构造序列的前n个元素
+void Generate(int a,int b,int N,int *Q)
+{
+    int tmpA,tmpB;
+    int j=1;
+    int j=1;
+    for(int k=0;k<N;k++)
+    {
+        tmpA=a*i;
+        tmpB=b*j;
+        if(tmpA<=tmpB)
+        {
+            Q[k]=tmpA;
+            i++;
+        }
+        else
+        {
+            Q[k]=tmpB;
+            j++;
+        }
+    }
+
+}
+
+//异或找出数组中只出现一次的数组
+int findNotDouble(int a[],int n)
+{
+    int result=a[0];
+    int i;
+    for(i=1;i<n;i++)
+    {
+        result^=a[i];
+    }
+    return result;
+}
+
 int main()
 {
     int array[]={1,2,3,4,5,6};
