@@ -675,6 +675,36 @@ int findNotDouble(int a[],int n)
     return result;
 }
 
+
+//如何找出数组中只出现一次的2个数字
+//两个数字至少有一位不同，为1
+void findOnce(int data[],int n,int &num1,int &num2)
+{
+    if(n<5)
+        return;
+    int r1=0;
+    for(int i=0;i<n;i++)
+    {
+        r1^=data[i];
+    }
+    int bitNum=0;
+    while(!(r1&0x1))
+    {
+        r1>>=1;
+        ++bitNum;
+    }
+    int flag=(1<<bitNum);
+    num1=0;
+    num2=0;
+    for(int j=0;j<n;j++)
+    {
+        if(data[j]&flag)
+            num1^=data[j];
+        else
+            num2^=data[j];
+    }
+}
+
 int main()
 {
     int array[]={1,2,3,4,5,6};
