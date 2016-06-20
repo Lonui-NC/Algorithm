@@ -2,6 +2,7 @@
 //author:Nic github 
 //数组相关
 
+
 //递归判断实现递增
 bool IsIncrease(int a[],int n)
 {
