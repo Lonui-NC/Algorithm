@@ -510,6 +510,188 @@ link delSame(link head)
 //采用Hash法，将对应的节点放入Hash表中，如果有节点，则删除原有节点，
 //否则将对应节点放入hash表
 
+//如何合并两个有序链表（非交叉）
+//方法1，递归
+Node *MergeRecursive(Node *head1,Node *head2)
+{
+    if(head1==NULL)
+        return head2;
+    if(head2==NULL)
+        return head1;
+    Node *head=NULL;
+    if(head1->data<head2->data)
+    {
+        head=head1;
+        head->next=MergeRecursive(head1->next,head2->next);
+    }
+    else
+    {
+        head=head2;
+        head->next=MergeRecursive(head1,head2->next);
+    }
+    return head;
+}
+
+
+//采用非递归方法实现
+//直接合并即可
+Node *Merge(Node *head,Node *head1,Node *head2)
+{
+    Node *tmp=head;
+    while(NULL!=head1 && NULL!=head2)
+    {
+        if(head1->data<head2->data)
+        {
+            tmp->next=head1;
+            tmp=head1;
+            head1=head1->next;
+        }
+        else
+        {
+            tmp->next=head2;
+            tmp=head2;
+            head2=head2->next;
+        }
+    }
+    if(NULL!=head1)
+    {
+        tmp->next=head1;
+    }
+    if(NULL!=head2)
+    {
+        tmp->next=head2;
+    }
+    return head;
+}
+
+
+
+
+//单循环链表的连接
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node
+{
+    int data;
+    struct node *next;
+}linklist;
+//rear是全局变量
+linklist *rear=NULL;
+
+linklist* CreateSingleLoopList()//单循环链表的实现
+{
+    int _data;
+    linklist *pCurrent,*head;
+    head=(linklist*)malloc(sizeof(linklist));
+    //第一个为初始化，尾部节点
+    //对应头结点是指向第一个有数据节点的节点
+    //但头结点本身没有数据
+    scanf("%d",&_data);
+    rear->data=_data;
+    rear->next=head;
+    head->next=rear;
+    scanf("%d",&data);
+    while(_data!=-1)
+    {
+        pCurrent=(linklist*)malloc(sizeof(linklist));
+        pCurrent->data=_data;
+        rear->next=pCurrent;
+        pCurrent->next=head;
+        rear=pCurrent;
+        scanf("%d",&_data);
+    }
+    return rear;
+}
+
+//默认传递的是尾节点
+void GetRearHead(linklist *p)//取开始节点和尾节点
+{
+    printf("%d",p->data);
+    printf("%d",p->next->next->data);
+}
+
+int main()
+{
+    /* code */
+    rear=(linklist *)malloc(sizeof(linklist));
+    CreateSingleLoopList();
+    GetRearHead(rear);
+    return 0;
+}
+
+
+//双链表
+typedef struct dlistnode
+{
+    /* data */
+    DataType data;
+    struct dlistnode *prior,*next;
+}DListNode;
+
+typedef DListNode *DLinkList;
+DLinkList head;
+
+//双向链表的插入
+void DInertBefore()
+{
+    //在带头节点的双链表中，将s插入到p之前
+    DLinkNode *s =malloc(sizeof(DListNode));
+    s->data=x;
+    s->prior=p->prior;
+    s->next=p;
+    p->prior->next=s;
+    p->prior=s;
+}
+
+//双链表删除节点*p
+void DDeleteNode(DListNode *p)
+{
+    //
+    p->prior->next=p->next;
+    p->next->prior=p->prior;
+    free(p);
+}
+
+
+//设置尾指针比头指针好
+//尾部指针可以查两个，头只能查一个！！！！
+
+
+//删除节点的前驱节点
+void DeleteNode(ListNode *s)
+{
+    ListNode *p,*q;
+    p=s;
+    while(p->next->next!=s)
+    {
+        p=q;
+        p=p->next;
+    }
+    q->next=s;
+    free(p);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
