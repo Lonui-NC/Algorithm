@@ -194,10 +194,93 @@ void ReversePrint(const char *s)
 }
 
 
+//如何找出一个字符串中第一个只出现1次的字符
+#include <stdio.h>
+//Hash法取对应数组，然后依次遍历
+char GetChar(char str[])
+{
+    if(str==NULL)
+        return 0;
+    const int size=256;
+    //对应的char应转换为无符号数
+    unsigned count[size]={0};
+    char buffer[size];
+    char *q=buffer;
+    for(const char *p=str;*p!=0;++p)
+    {
+        //这里写的表明了边界，防止重复查找
+        if(++count[(unsigned char)*p]==1)
+        {
+            *q++=*p;
+        }
+    }
+    for(p=buffer;p<q;++p)
+    {
+        if(count[(unsigned char)*p]==1)
+            return *p;
+    }
+    return 0;
+}
 
 
 
+//如何输出字符串的所有组合
+#include <stdio.h>
+#include <string.h>
 
+void CombileRevursiveImpl(const char *str,char *begin,char *end)
+{
+    if(*str==0)
+    {
+        *end=0;
+        if(begin!=end)
+            printf("%s\n", begin);
+        return;
+    }
+    CombileRevursiveImpl(str+1,begin,end);
+    *end=*str;
+    //当为最后一个的时候，打印执行先是c 
+    CombileRevursiveImpl(str+1,begin,end+1);
+}
+
+
+//构造01字符串进行组合
+void Combine(const char str[])
+{
+    if(str==NULL || *str==0)
+        return;
+    const int MAXLENGTH=64;
+    int len=strlen(str);
+    bool used[MAXLENGTH]={0};
+    char cache[MAXLENGTH];
+    char *result=cache+len;//最后一个
+    *result=0;
+    while(1)
+    {
+        //同样第二次的时候这里变成了index 0,但是used变成了true
+        int index=0;
+        //开始index为0，对应为false
+        while(used[index])
+        {
+            //进入执行，变成了false
+            used[index]=false;
+            //重新输出最后的一个
+            ++result;//result 最后一个
+            //index=1
+            if(++index==len)
+                return;
+        }
+        //index=1
+        //对应为true
+        used[index]=true;
+        //将对应的输出最后一个字符
+        //再来一次时，成为了ba
+        *--result=str[index];
+        //result--;
+        printf("%s",result);
+    }
+
+}
 
 
 
