@@ -706,6 +706,193 @@ void findOnce(int data[],int n,int &num1,int &num2)
     }
 }
 
+
+//最大子序列的方法
+//只要前n项的和还没有小于0，那么就向后扩展
+//否则丢弃之前的子序列，开始新的序列！
+
+
+//最长递增序列
+
+// 比如arr={1,5,8,2,3,4}的最长递增子序列是1,2,3,4
+// 动态规划的思想，
+// 考虑{arr[0],...,arr[i]}的最长递增子序列时
+// 需要找到所有比arr[i]小的arr[j]，且j<i，
+// 结果应该是所有{arr[0],...,arr[j]}的最长递增子序列中最长的那一个再加1。
+// 即我们需要一个辅助的数组aid_arr，aid_arr[i]的值是{arr[0],...,arr[i]}的最长递增子序列的长度，
+// aid_arr[0]=1。
+
+//最长递增子序列从头开始
+int main()
+{
+    const int len=14;
+    int arr[len]={1,9,3,8,11,4,5,6,4,1,9,7,1,7};
+    vector<int> vec(&arr[0],&arr[len]);
+    vector<int> monoseqlen(len,1);//初始化，len个为1
+    vector<int> preindex(len,-1);
+    int maxmonoseqlen=-1;
+    int maxmonoindex=-1;
+
+    for(int i=1;i<len;i++)
+    {
+        int curr=vec[i];//第一个数
+        for(int j=0;j<i;j++)
+        {
+            if(vec[j]<vec[i])
+            {
+                //对应的monosqlen是相对应的长度值，表示在
+                //当前j的位置上monoseqlen是当前j的最大递增子序列
+                //所以加1表明现在的最大递增是多少
+                //所以这里要从头开始
+                int msl=monoseqlen[j]+1;
+                if(msl>monoseqlen[i])
+                {
+                    monoseqlen[i]=msl;
+                    preindex[i]=j;//表明在i对应位置最大子序列前一个是j
+                }
+            }
+        }
+
+        for(int i=0;i<len;i++)
+        {
+            if(monoseqlen[i]>maxmonoseqlen)
+            {
+                //取最大值!
+                maxmonoseqlen=monoseqlen[i];
+                maxmonoindex=i;
+            }
+        }
+
+        stack<int> st;
+        //取当前点的序列值，依次找前一点序列值，逆向输出！
+        while(maxmonoindex>=0)
+        {
+            st.push(vec[maxmonoindex]);
+            maxmonoindex=preindex[maxmonoindex];
+        }
+
+        vector<int> rect;
+        while(!st.empty()){
+            rect.push_back(st.top());
+            st.pop();
+        }
+
+        vector<int>::iterator itr=rect.begin();
+        while(itr!=rect.end()){
+            count<<*itr++<<"\t";
+        }
+        cout<<endl;
+        return 0;
+
+    }
+
+}
+
+
+//最长公共子串LCS
+// 个二维矩阵怎么构造呢？直接举个例子吧："bab"和"caba"(当然我们现在一眼就可以看出来最长公共子串是"ba"或"ab")
+
+// 　　 b　　a　　b
+
+// c　　0　　0　　0
+
+// a　　0　　1　　0
+
+// b　　1　　0　　1
+
+// a　　0　　1　　0
+
+//求对应最长元素的子串，，构造上述二维矩阵，然后让对角线上为其前一行
+//加1即可
+//  b　　a　　b
+
+// c　　0　　0　　0
+
+// a　　0　　1　　0
+
+// b　　1　　0　　2
+
+// a　　0　　2　　0
+
+//str1是横向，str2是纵向
+const string LCS(const string& str1,const string& str2)
+{
+    //用一维数组横向比较保存
+    int xlen=str1.size();//横向长度
+    vector<int> tmp(xlen);//保存矩阵的上一行
+    //arr(tmp) 表明对应为tmp的一个副本
+    vector<int> arr(tmp);//当前行
+    int ylen=str2.size();//纵向长度
+    int maxele=0;//矩阵中出现的最大值
+    int pos=0;//矩阵原酸最大值的列数
+    for(int i=0;i<ylen;i++)
+    {
+        string s=str2.substr(i,1);
+        arr.assign(xlen,0);//数组清0
+        //取其中每一个字符进行比较
+        for(int j=0;j<xlen;j++)
+        {
+            //单个字符对应
+            if(str1.compare(j,1,s)==0)
+            {
+                if(j==0)
+                    arr[j]=1;//首行字符为1
+                else
+                    arr[j]=tmp[j-1]+1;//否则为上一行字符加1
+                if(arr[j]>maxele)
+                {
+                    maxele=arr[j];
+                    pos=j;
+                }
+            }
+        }
+
+        tmp.assign(arr.beign(),arr.end());
+    }
+    string res=str1.substr(pos-maxele+1,maxele);
+    return res;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int main()
 {
     int array[]={1,2,3,4,5,6};

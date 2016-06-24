@@ -283,6 +283,68 @@ void Combine(const char str[])
 }
 
 
+//如何检查字符是否是整数
+int cheak(int p)
+{
+    int c=p;
+    if(isdigit(p))
+        c=p-48;
+    return c;
+}
+
+int main()
+{
+    int c;
+    while((c=getchar())!=EOF)
+    {
+        getchar();
+        c=cheak(c);
+        if(isalpha(c))
+            printf("no\n");
+        else
+            printf("yes\n");
+    }
+    return 0;
+}
+
+
+
+//如何查找字符串中每个字符出现的个数
+//初始化数组加1即可
+int main()
+{
+    char *str="AbcABCa";
+    int count[256]={0};
+    for(char *p=str;*p;p++)
+    {
+        count[*p]++;
+    }
+    for(int i=0;i<256;i++)
+    {
+        if(count[i]>0)
+            printf("the count of %c is %d\n",i,count[i]);
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
