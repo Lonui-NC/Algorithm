@@ -329,6 +329,137 @@ int main()
 
 
 
+//最长公共子序列与最长公共子串，仅在于是不是连续
+//最大优先级，左上》左》上
+#define LEFTUP 0
+#define LEFT 1
+#define UP 2
+using namespace std;
+int Max(int a,int b,int c,int *max){
+    //找最大时的优先级a最大
+    int res=0;//res记录来自哪个单元格
+    *max=a;
+    if(b>*max)
+    {
+        *max=b;
+        res=1;
+    }
+    if(c>*max)
+    {
+        *max=c;
+        res=2;
+    }
+    return res;
+}
+
+//调用函数时将长的字符串给str1，
+string LCS(const string &str1,const string &str2)
+{
+    int xlen=str1.size();//横向长度
+    int ylen=str2.size();//纵向长度
+    if(xlen==0||ylen==0)
+    {
+        return "";
+    }
+    pair<int,int>arr[ylen+1][xlen+1];//构造数组，first记录数据，second记录来源
+    for(int i=0;i<=xlen;i++)//首行清0
+        arr[0][1].first=0;
+    for(int j=0;j<=ylen;j++)//首列清0
+        arr[j][0].first=0;
+    for(int i=1;i<=ylen;i++)
+    {
+        char s=str2.at(i-1);
+        //构造时一列一列的构造，因为对应寻找要么是左要么是上，便于生成
+        for(int j=1;j<=xlen;j++){
+            int leftup=arr[i-1][j-1].first;
+            int left=arr[i][j-1].first;
+            int up=arr[i-1][j].first;
+            if(str1.at(j-1)==s) //C1=C2
+                leftup++;
+            int max;
+            arr[i][j].second=Max(leftup,left,up,&arr[i][j].first);
+        }
+        //矩阵构造完，可以生成
+    }
+    //回溯找出最长公共子序列
+    stack<int> st;
+    int i=ylen,j=xlen;
+    //最长子序列，为两者之一
+    while(i>=0 && j>=0)
+    {
+        if(arr[i][j].second==LEFTUP)
+        {
+            //如果是包括当前点，将当前点也加进去
+            //其余都是不包含当前点的，不用加入
+            if(arr[i][j].first==arr[i-1][j-1].first+1)
+                st.push(i);
+            --i;
+            --j;
+        }
+        else if(arr[i][j].second==LEFT){
+            --j;
+        }
+        else if(arr[i][j].second==UP){
+            --i;
+        }
+    }
+    string res="";
+    while(!st.empty())
+    {
+        int index=st.top()-1;
+        res.append(str2.substr(index,1))//拼接字符串
+        st.pop();
+    }
+    return res;
+
+
+
+
+}
+
+
+//java版本
+public static <E> List<E> longestCommonSubsequence(E[] s1,E[] s2){
+    int[][] num=new int[s1.length+1][s2.length+1];
+    for(int i=1;i<s1.length+1;i++)
+    {
+        for(int j=1;j<s2.length+1;j++)
+        {
+            if(s1[i-1].equals(s2[j-1]))
+            {
+                num[i][j]=num[i-1][j-1]+1;
+            }
+            else
+            {
+                num[i][j]=Max.max(num[i-1][j],num[i][j-1]);
+            }
+        }
+    }
+    System.out.println("length:"+num[s1.length][s2.length]);
+    int s1position=s1.length,s2position=s2.length;
+    List<E> result=new LinkedList<E>();
+    while(s1position>0 && s2position>0)
+    {
+        if(s1[s1position-1].equals(s2[s2position-1]))
+        {
+            result.add(s1[s1position-1]);
+            s1position--;
+            s2position--;
+        }
+        else if(num[s1position][s2position-1]>=num[s1position-1][s2position])
+        {
+            s2position--;
+        }
+        else
+        {
+            s1position--;
+        }
+    }
+    Collections.reverse(result);
+    return result;
+
+
+}
 
 
 

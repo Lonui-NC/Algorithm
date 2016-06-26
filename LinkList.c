@@ -673,6 +673,178 @@ void DeleteNode(ListNode *s)
 }
 
 
+//循环链表实现
+//front==rear 同时对应循环队列，尾指针追赶上头指针
+//所有对应的方法判断满还是空
+//1,设置标志位，2，对应规定头指针在队列尾指针的下一个位置时为满
+#define MAXSIZE 1000
+typedef int ElemType;
+typedef struct 
+{
+    ElemType data[MAXSIZE];
+    int front;
+    int rear;
+}CircSeqQueue;
+
+//顺序循环队列的初始化
+void QueueInitial(CircSeqQueue *pQ)
+{
+    pQ->front=pQ->rear=0;
+}
+
+//顺序循环队列判空
+int isEmpty(CircSeqQueue *pQ)
+{
+    return pQ->front==pQ->rear;
+}
+
+//顺序链表判别为满
+int isFull(CircSeqQueue *pQ)
+{
+    return (pQ->rear+1)%MAXSIZE==pQ->front;
+}
+
+//元素进队列
+void EnQueue(CircSeqQueue *pQ,ElemType e)
+{
+    if(isFull(pQ))
+    {
+        printf("Full!\n");
+        exit(1);
+    }
+    pQ->rear=(pQ->rear+1)%MAXSIZE;
+    pQ->data[pQ->rear]=e;
+}
+
+//元素出队列
+ElemType DeQueue(CircSeqQueue *pQ)
+{
+    if(isEmpty(pQ))
+    {
+        printf("Empty!\n");
+        exit(1);
+    }
+    pQ->front=(pQ->front+1)%MAXSIZE;
+    return pQ->data[pQ->front];
+}
+
+//取队头元素
+ElemType GetFront(CircSeqQueue *pQ)
+{
+    if(isEmpty(pQ))
+    {
+        printf("Empty!\n");
+        exit(1);
+    }
+    return pQ->data[(pQ->front+1)%MAXSIZE];
+}
+
+//循环队列置空
+void MakeEmpty(CircSeqQueue *pQ)
+{
+    pQ->front=pQ->rear=0;
+}
+
+
+//如何使用两个栈模拟队列的操作
+//一个用于插入，一个用于删除
+//如果B不为空，则直接弹出B的数据
+//如果B为空，则依次弹出A到B，然后弹出B
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+template<typename T>
+class QueueByDoubleStack
+{
+    public:
+        size_t size();
+        bool empty();
+        void push(T t);
+        void pop();
+        T top();
+    private:
+        stack<T> s1;
+        stack<T> s2;
+
+};
+
+//在类外定义函数需要指明对应的类
+template<typename T>
+size_t QueueByDoubleStack<T>::size()
+{
+    return s1.size()+s2.size();
+}
+
+template<typename T>
+bool QueueByDoubleStack<T>::empty()
+{
+    return s1.empty() && s2.empty();
+}
+
+template<typename T>
+void QueueByDoubleStack<T>::push(T t)
+{
+    s1.push(t);
+}
+
+template<typename T>
+void QueueByDoubleStack<T>::pop()
+{
+    if(s2.empty())
+    {
+        while(!s1.empty())
+        {
+            s2.push(s1.top());
+            s1.pop();
+        }
+    }
+    s2.pop();
+}
+
+template<typename T>
+T QueueByDoubleStack<T>::top()
+{
+    if(s2.empty())
+    {
+         while(!s1.empty())
+         {
+            s2.push(s1.top());
+            s1.pop();
+         }
+    }
+    return s2.top();
+}
+
+int main()
+{
+    QueueByDoubleStack<int> q;
+    for(int i=0;i<10;++i)
+    {
+        q.push();
+    }
+    while(!q.empty())
+    {
+        cout<<q.top()<<'';
+        q.pop();
+    }
+    cout<<endl;
+    return 0;
+}
+
+
+//如何用两个队列实现栈
+//首先所有元素进入队列1
+//然后判断是否只有一个元素，如果只有一个元素，那么就出来
+//否则将所有元素输入到另一个队列，第一个队列只剩下1个元素，从而出来，完成栈！
+
+
+
+
+
+
+
 
 
 
